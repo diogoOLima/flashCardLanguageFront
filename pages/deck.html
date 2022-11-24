@@ -15,62 +15,121 @@
     <script src="https://kit.fontawesome.com/d4bd9272a1.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container mt-4 text-center baralhos the-card">
-        <div class="row front-card" onclick="virar()">
-            <div class="col-12 col-sm-8 col-md-6 col-lg-4 mb-3">
-                <div class="card card-baralho">
-                    <p class="frase">I love Brazil because de wheather is hot and people are friendly</p>
-                    <div class="card-body card-body-baralho">
-                        <h2 class="card-title">Virar Carta -></h2>
-                    </div>
-                </div>
-            </div>
+    <div id="container-progresso" class="col-10 col-sm-6 col-md-4">
+        <div id="barra">
+            <div></div>
         </div>
-        <div class="row back-card" onclick="desvirar()">
-            <div class="col-12 col-sm-8 col-md-6 col-lg-4 mb-3">
-                <div class="card card-baralho">
-                    <p class="frase">Eu amo</p>
-                    <div class="card-body card-body-baralho">
-                        <div class="classificacao">
-                            <button class="dificuldade">
-                                <div class="emoji">
-                                    &#x1F600
-                                </div>
-                                <div>
-                                    Fácil
-                                </div>
-                            </button>
-                            <button class="dificuldade">
-                                <div class="emoji">
-                                    &#x1F642
-                                </div>
-                                <div>
-                                    Normal
-                                </div>
-                            </button>
-                            <button class="dificuldade">
-                                <div class="emoji">
-                                    &#x1F61F
-                                </div>
-                                <div>
-                                    Difícil
-                                </div>
-                            </button>
-                            <button class="dificuldade">
-                                <div class="emoji">
-                                    &#x1F616
-                                </div>
-                                <div>
-                                    Não sei
-                                </div>
-                            </button>
+        <div id="infoProgresso"></div>
+    </div>
+    <div class="container mt-4 text-center baralhos the-card">
+        
+    </div>
+
+    <script>
+        let theCard = document.querySelector('.the-card');
+        let card
+
+        var iterifyArr = function (arr) {
+            var cur = 0;
+            arr.next = (function () { return (++cur >= this.length) ? false : this[cur]; });
+            arr.prev = (function () { return (--cur < 0) ? false : this[cur]; });
+            return arr;
+        };
+
+        const cards = [
+            {
+                id: "1",
+                ingSide: "How do you pronounce...?",
+                porSide: "Como se pronuncia...?"
+            },
+            {
+                id: "2",
+                ingSide: "Can you repeat that?",
+                porSide: "Pode repetir isso?"
+            },
+            {
+                id: "3",
+                ingSide: "Let's have dinner!",
+                porSide: "Vamos jantar!"
+            },
+            {
+                id: "4",
+                ingSide: "How do you say 'water' in Japanese",
+                porSide: "Como se diz 'água' em japonês"
+            }
+        ]
+        iterifyArr(cards);
+        
+        card = cards[0];
+        carregarCard();
+        
+        const infoProgressoDOM = document.querySelector('#infoProgresso')
+        const progresso = document.querySelector("#barra div")
+        const countAulas = cards.length;
+        console.log(countAulas)
+        let countConcluido = 0;
+
+        calcularProgresso();
+        
+        
+        function carregarCard(){
+            theCard.innerHTML = `
+                <div class="row front-card" onclick="virar()">
+                    <div class="col-12 col-sm-8 col-md-6 col-lg-4 mb-3">
+                        <div class="card card-baralho">
+                            <p class="frase">${card.ingSide}</p>
+                            <div class="card-body card-body-baralho">
+                                <h2 class="card-title">Virar Carta -></h2>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <script>
+                <div class="row back-card">
+                    <div class="col-12 col-sm-8 col-md-6 col-lg-4 mb-3">
+                        <div class="card card-baralho">
+                            <p class="frase" onclick="desvirar()">${card.porSide}</p>
+                            <div class="card-body card-body-baralho">
+                                <div class="classificacao">
+                                    <button class="dificuldade" onclick="avaliar()">
+                                        <div class="emoji">
+                                            &#x1F600
+                                        </div>
+                                        <div>
+                                            Fácil
+                                        </div>
+                                    </button>
+                                    <button class="dificuldade" onclick="avaliar()">
+                                        <div class="emoji">
+                                            &#x1F642
+                                        </div>
+                                        <div>
+                                            Normal
+                                        </div>
+                                    </button>
+                                    <button class="dificuldade" onclick="avaliar()">
+                                        <div class="emoji">
+                                            &#x1F61F
+                                        </div>
+                                        <div>
+                                            Difícil
+                                        </div>
+                                    </button>
+                                    <button class="dificuldade" onclick="avaliar()">
+                                        <div class="emoji">
+                                            &#x1F616
+                                        </div>
+                                        <div>
+                                            Não sei
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        }
+
         function virar() {
             card = document.querySelector('.the-card');
             card.style.transform = "rotateY(180deg)"
@@ -81,6 +140,46 @@
             card = document.querySelector('.the-card');
             card.style.transform = "rotateY(0deg)"
         }
+
+        async function avaliar() {
+            desvirar();
+            await sleep(250);
+            card = cards.next();
+            
+            countConcluido++;
+            calcularProgresso();
+            
+            if(card != false){
+                carregarCard();
+            }else {
+                theCard.innerHTML= `
+                    <div class="row front-card" onclick="virar()">
+                        <div class="col-12 col-sm-8 col-md-6 col-lg-4 mb-3">
+                            <div class="card card-baralho">
+                                <p class="frase">Baralho finalizado!</p>
+                                
+                                <a href="./userPage.html">
+                                    <div class="card-body card-body-baralho">
+                                        <h2 class="card-title">Voltar a tela inicial</h2>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        }
+
+        function calcularProgresso() {
+            let progressoAtual = (countConcluido / countAulas) * 100;
+            progresso.style.width= `${progressoAtual}%`
+            infoProgressoDOM.innerHTML = `${~~progressoAtual}% - ${countConcluido}/${countAulas}<br>`
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
     </script>
 </body>
 </html>

@@ -51,6 +51,12 @@
     color: #005EEC;
 }
 
+.fa-house {
+    border-radius: 50%;
+    background-color: white;
+    color: #005EEC;
+}
+
 .opc-menu {
     display: flex;
     justify-content: space-around;
