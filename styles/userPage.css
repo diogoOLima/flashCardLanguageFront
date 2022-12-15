@@ -63,3 +63,13 @@
     height: 100%;
     align-items: center;
 }
+
+.alert {
+    font-size: 2rem;
+    border: 2px solid red !important;
+    background-color: rgba(255, 0, 0, 0.233) !important;
+}
+
+.linkDeck {
+    text-decoration: none;
+}
